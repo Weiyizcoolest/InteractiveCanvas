@@ -3,180 +3,67 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Cosine Angle Sum Identity</title>
-  <script src="https://cdn.plot.ly/plotly-2.35.2.min.js"></script>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      margin: 20px;
-      line-height: 1.4;
-    }
-    .controls {
-      margin-bottom: 20px;
-      padding: 12px;
-      border: 1px solid #ccc;
-      border-radius: 10px;
-      max-width: 700px;
-    }
-    .control-row {
-      margin: 12px 0;
-    }
-    label {
-      display: inline-block;
-      width: 90px;
-      font-weight: bold;
-    }
-    input[type="range"] {
-      width: 300px;
-      vertical-align: middle;
-    }
-    .value {
-      display: inline-block;
-      width: 80px;
-      text-align: right;
-      margin-left: 10px;
-      font-family: monospace;
-    }
-    .formula {
-      margin: 16px 0;
-      font-size: 1.1rem;
-      background: #f7f7f7;
-      padding: 12px;
-      border-radius: 8px;
-      max-width: 700px;
-    }
-    #plot {
-      max-width: 900px;
-      height: 500px;
-    }
-  </style>
+  <title>Activity Prototype Gallery</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <h1>Interactive Graph: Cosine Angle Sum Identity</h1>
-  <p>
-    This demonstrates:
-    <strong>cos(A + B) = cos(A)cos(B) - sin(A)sin(B)</strong>
-  </p>
-
-  <div class="controls">
-    <div class="control-row">
-      <label for="aSlider">Angle A:</label>
-      <input type="range" id="aSlider" min="-180" max="180" value="30" step="1" />
-      <span class="value" id="aValue">30°</span>
+  <header class="page-header">
+    <div class="container">
+      <p class="eyebrow">Prototype Showcase</p>
+      <h1>Interactive Activity Gallery</h1>
+      <p class="page-intro">
+        A collection of activity prototypes for testing interaction types,
+        styling consistency, and Canvas embedding workflows.
+      </p>
     </div>
+  </header>
 
-    <div class="control-row">
-      <label for="bSlider">Angle B:</label>
-      <input type="range" id="bSlider" min="-180" max="180" value="45" step="1" />
-      <span class="value" id="bValue">45°</span>
-    </div>
-  </div>
+  <main class="container">
+    <section class="gallery-grid">
+      <article class="gallery-card">
+        <div class="card-top">
+            <span class="status-badge status-done">Done</span>
+        </div>
+        <h2>Interactive Graph</h2>
+        <p class="file-label">graph.html</p>
+        <div class="card-actions">
+          <a class="btn btn-primary" href="graph.html">Open Activity</a>
+        </div>
+      </article>
 
-  <div class="formula" id="results"></div>
+      <article class="gallery-card">
+        <div class="card-top">
+          <span class="status-badge status-testing">In Test</span>
+        </div>
+        <h2>Interactive Chart</h2>
+        <p class="file-label">chart.html</p>
+        <div class="card-actions">
+          <a class="btn btn-primary" href="chart.html">Open Activity</a>
+        </div>
+      </article>
 
-  <div id="plot"></div>
+      <article class="gallery-card">
+        <div class="card-top">
+          <span class="status-badge status-progress">Not Started</span>
+        </div>
+        <h2>Knowledge Check</h2>
+        <p class="file-label">knowledgeCheck.html</p>
+        <div class="card-actions">
+          <a class="btn btn-primary" href="knowledgeCheck.html">Open Activity</a>
+        </div>
+      </article>
 
-  <script>
-    const aSlider = document.getElementById("aSlider");
-    const bSlider = document.getElementById("bSlider");
-    const aValue = document.getElementById("aValue");
-    const bValue = document.getElementById("bValue");
-    const results = document.getElementById("results");
-
-    function degToRad(deg) {
-      return deg * Math.PI / 180;
-    }
-
-    function formatNum(x) {
-      return x.toFixed(6);
-    }
-
-    function generateXValues(start, end, step) {
-      const arr = [];
-      for (let x = start; x <= end; x += step) {
-        arr.push(x);
-      }
-      return arr;
-    }
-
-    function updatePlot() {
-      const Adeg = Number(aSlider.value);
-      const Bdeg = Number(bSlider.value);
-
-      aValue.textContent = `${Adeg}°`;
-      bValue.textContent = `${Bdeg}°`;
-
-      const Arad = degToRad(Adeg);
-      const Brad = degToRad(Bdeg);
-
-      const lhsValue = Math.cos(Arad + Brad);
-      const rhsValue = Math.cos(Arad) * Math.cos(Brad) - Math.sin(Arad) * Math.sin(Brad);
-
-      results.innerHTML = `
-        <div><strong>A</strong> = ${Adeg}°, <strong>B</strong> = ${Bdeg}°, <strong>A+B</strong> = ${Adeg + Bdeg}°</div>
-        <div><strong>Left side:</strong> cos(A+B) = ${formatNum(lhsValue)}</div>
-        <div><strong>Right side:</strong> cos(A)cos(B) - sin(A)sin(B) = ${formatNum(rhsValue)}</div>
-        <div><strong>Difference:</strong> ${formatNum(Math.abs(lhsValue - rhsValue))}</div>
-      `;
-
-      const xDeg = generateXValues(-360, 360, 2);
-      const xRad = xDeg.map(degToRad);
-
-      const lhsCurve = xRad.map(x => Math.cos(x + Brad));
-      const rhsCurve = xRad.map(x => Math.cos(x) * Math.cos(Brad) - Math.sin(x) * Math.sin(Brad));
-
-      const pointY = Math.cos(Arad + Brad);
-
-      const data = [
-        {
-          x: xDeg,
-          y: lhsCurve,
-          mode: "lines",
-          name: "cos(A + B)",
-        },
-        {
-          x: xDeg,
-          y: rhsCurve,
-          mode: "lines",
-          name: "cos(A)cos(B) - sin(A)sin(B)",
-        },
-        {
-          x: [Adeg],
-          y: [pointY],
-          mode: "markers",
-          name: "Current value",
-          marker: { size: 10 }
-        }
-      ];
-
-      const layout = {
-        title: `Cosine Sum Identity with B = ${Bdeg}°`,
-        xaxis: {
-          title: "Angle A (degrees)"
-        },
-        yaxis: {
-          title: "Value",
-          range: [-1.2, 1.2]
-        },
-        legend: {
-          x: 0.02,
-          y: 0.98
-        },
-        margin: {
-          l: 60,
-          r: 20,
-          t: 60,
-          b: 60
-        }
-      };
-
-      Plotly.newPlot("plot", data, layout, { responsive: true });
-    }
-
-    aSlider.addEventListener("input", updatePlot);
-    bSlider.addEventListener("input", updatePlot);
-
-    updatePlot();
-  </script>
+      <article class="gallery-card">
+        <div class="card-top">
+          <span class="status-badge status-progress">Not Started</span>
+        </div>
+        <h2>Flipcard Activity</h2>
+        <p class="file-label">flipcard.html</p>
+        <div class="card-actions">
+          <a class="btn btn-primary" href="flipcard.html">Open Activity</a>
+        </div>
+      </article>
+    </section>
+  </main>
 </body>
 </html>
